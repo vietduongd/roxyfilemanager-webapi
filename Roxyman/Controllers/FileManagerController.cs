@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Roxyman.Extension;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -170,7 +171,6 @@ namespace Roxyman.Controllers
         [AllowAnonymous, ActionName("")]
         public string Get() { return "Filemanager - access to API requires Authorisation"; }
 
-
         public IHttpActionResult DIRLIST(string type)
         {
             try
@@ -186,9 +186,9 @@ namespace Roxyman.Controllers
                     string dir = (string)dirs[i];
                     result += (result != "" ? "," : "") + "{\"p\":\"" + MakeVirtualPath(dir.Replace(localPath, "").Replace("\\", "/")) + "\",\"f\":\"" + GetFiles(dir, type).Count.ToString() + "\",\"d\":\"" + Directory.GetDirectories(dir).Length.ToString() + "\"}";
                 }
-                return Content(HttpStatusCode.OK, "[" + result + "]", new JsonMediaTypeFormatter(), new MediaTypeHeaderValue("application/json"));
+                return new OkExtension("[" + result + "]");
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
         public IHttpActionResult FILESLIST(string d, string type)
         {
@@ -212,11 +212,11 @@ namespace Roxyman.Controllers
                         ",\"h\":\"" + h.ToString() + "\"" +
                         "}";
                 }
-                return Content(HttpStatusCode.OK, "[" + result + "]", new JsonMediaTypeFormatter(), new MediaTypeHeaderValue("application/json"));
+                return new OkExtension("[" + result + "]");
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
-
+        [HttpGet]
         public IHttpActionResult COPYDIR(string d, string n)
         {
             try
@@ -234,7 +234,7 @@ namespace Roxyman.Controllers
             }
             catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
         }
-
+        [HttpGet]
         public IHttpActionResult CREATEDIR(string d, string n)
         {
             try
