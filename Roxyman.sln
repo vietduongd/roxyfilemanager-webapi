@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.539
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roxyman", "Roxyman\Roxyman.csproj", "{B3D384CB-7AC7-4229-93A7-99A287AABDAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3D384CB-7AC7-4229-93A7-99A287AABDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D384CB-7AC7-4229-93A7-99A287AABDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D384CB-7AC7-4229-93A7-99A287AABDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D384CB-7AC7-4229-93A7-99A287AABDAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41B96D05-7604-4D28-8809-D735C318F697}
+	EndGlobalSection
+EndGlobal
