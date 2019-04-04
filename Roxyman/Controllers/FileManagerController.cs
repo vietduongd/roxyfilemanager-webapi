@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Roxyman.Extension;
 using System;
 using System.Collections;
@@ -12,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Roxyman.Controllers
 {
@@ -230,9 +232,9 @@ namespace Roxyman.Controllers
                 if (!dir.Exists) throw new Exception(LangRes("E_CopyDirInvalidPath"));
                 else if (newDir.Exists) throw new Exception(LangRes("E_DirAlreadyExists"));
                 else CopyDir(dir.FullName, newDir.FullName);
-                return Content(HttpStatusCode.OK, GetSuccessRes(), new JsonMediaTypeFormatter(), new MediaTypeHeaderValue("application/json"));
+                return new OkExtension(GetSuccessRes());
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
         [HttpGet]
         public IHttpActionResult CREATEDIR(string d, string n)
@@ -249,12 +251,12 @@ namespace Roxyman.Controllers
                     {
                         d = Path.Combine(d, n);
                         if (!Directory.Exists(d)) Directory.CreateDirectory(d);
-                        return Content(HttpStatusCode.OK, GetSuccessRes(), new JsonMediaTypeFormatter(), new MediaTypeHeaderValue("application/json"));
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_CreateDirFailed")); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
 
         public IHttpActionResult DELETEDIR(string d)
@@ -272,12 +274,12 @@ namespace Roxyman.Controllers
                     try
                     {
                         Directory.Delete(d);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_CannotDeleteDir")); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
 
         public IHttpActionResult DELETEFILE(string f)
@@ -293,12 +295,12 @@ namespace Roxyman.Controllers
                     try
                     {
                         System.IO.File.Delete(f);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_DeletеFile")); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
         public HttpResponseMessage DOWNLOAD(string f)
         {
@@ -369,12 +371,12 @@ namespace Roxyman.Controllers
                     try
                     {
                         source.MoveTo(dest.FullName);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_MoveDir") + " \"" + d + "\""); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
 
         public IHttpActionResult MOVEFILE(string f, string n)
@@ -395,12 +397,12 @@ namespace Roxyman.Controllers
                     try
                     {
                         source.MoveTo(dest.FullName);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_MoveFile") + " \"" + f + "\""); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
 
         public IHttpActionResult RENAMEDIR(string d, string n)
@@ -419,12 +421,12 @@ namespace Roxyman.Controllers
                     try
                     {
                         source.MoveTo(dest.FullName);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception) { throw new Exception(LangRes("E_RenameDir") + " \"" + d + "\""); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
 
         public IHttpActionResult RENAMEFILE(string f, string n)
@@ -442,20 +444,21 @@ namespace Roxyman.Controllers
                     try
                     {
                         source.MoveTo(dest.FullName);
-                        return Content(HttpStatusCode.OK, GetSuccessRes());
+                        return new OkExtension(GetSuccessRes());
                     }
                     catch (Exception ex) { throw new Exception(ex.Message + "; " + LangRes("E_RenameFile") + " \"" + f + "\""); }
                 }
             }
-            catch (Exception ex) { return Content(HttpStatusCode.BadRequest, GetErrorRes(ex.Message)); }
+            catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
-
+        
         [HttpPost]
-        public string UPLOAD(FormDataCollection data)
+        public string UPLOAD()
         {
             try
             {
-                string d = data["d"];
+                string d = HttpContext.Current.Request.Form["d"];
+
                 d = MakePhysicalPath(d);
                 CheckPath(d);
                 d = FixPath(d);
