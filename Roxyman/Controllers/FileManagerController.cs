@@ -236,7 +236,7 @@ namespace Roxyman.Controllers
             }
             catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
-        [HttpGet]
+
         public IHttpActionResult CREATEDIR(string d, string n)
         {
             try
@@ -258,7 +258,7 @@ namespace Roxyman.Controllers
             }
             catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
-
+        [HttpPost]
         public IHttpActionResult DELETEDIR(string d)
         {
             try
@@ -281,7 +281,7 @@ namespace Roxyman.Controllers
             }
             catch (Exception ex) { return new BadRequestExtension(GetErrorRes(ex.Message)); }
         }
-
+        [HttpPost]
         public IHttpActionResult DELETEFILE(string f)
         {
             try
